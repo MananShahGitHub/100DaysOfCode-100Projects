@@ -1,0 +1,54 @@
+# Step 5: Hangman Game
+import random
+from hangman_words import word_list  # TODO-1: Use the word list from hangman_words.py
+from hangman_art import logo, stages  # TODO-3: Import the logo and stages from hangman_art.py
+
+# Delete this line: word_list = ["ardvark", "baboon", "camel"]
+
+chosen_word = random.choice(word_list)
+word_length = len(chosen_word)
+
+end_of_game = False
+lives = 6
+
+print(logo)  # Print the logo at the start
+
+# Testing code
+print(f'Pssst, the solution is {chosen_word}.')
+
+display = ["_"] * word_length  # Create blanks
+guessed_letters = []  # Track guessed letters
+
+while not end_of_game:
+    guess = input("Guess a letter: ").lower()
+
+    # TODO-4: Check for repeated guesses
+    if guess in guessed_letters:
+        print(f"You've already guessed {guess}.")
+    else:
+        guessed_letters.append(guess)
+
+        # Check guessed letter
+        for position in range(word_length):
+            letter = chosen_word[position]
+            if letter == guess:
+                display[position] = letter
+
+        # Check if user is wrong.
+        if guess not in chosen_word:
+            # TODO-5: Handle incorrect guesses
+            print(f"{guess} is not in the word.")
+            lives -= 1
+            if lives == 0:
+                end_of_game = True
+                print("You lose.")
+
+        print(f"{' '.join(display)}")
+
+        if "_" not in display:
+            end_of_game = True
+            print("You win.")
+
+    # TODO-2: Import and use the stages from hangman_art.py
+    print(stages[lives])  # Print the hangman stages
+
