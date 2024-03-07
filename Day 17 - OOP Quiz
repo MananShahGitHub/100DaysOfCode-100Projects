@@ -1,0 +1,98 @@
+#main.py
+
+from question_model import Question
+from data import question_data
+from quiz_brain import QuizBrain
+
+question_bank = []
+
+for item in question_data:
+    # Create a Question object and add it to the list
+    question_text = item["question"]
+    question_answer = item["correct_answer"]
+    new_question = Question(question_text, question_answer)
+    question_bank.append(new_question)
+
+quiz = QuizBrain(question_bank)
+
+while quiz.still_has_questions():
+    quiz.itemretrieve()
+
+print("You've completed the quiz.")
+print(f"You're final score was {quiz.current_score}/{len(question_bank)}")
+
+#question_model.py
+
+class Question:
+
+    def __init__(self, q_text, q_answer):
+        self.text = q_text
+        self.answer = q_answer
+
+#quiz_brain.py
+
+class QuizBrain:
+
+    def __init__(self, q_list):
+        self.question_number = 0
+        self.question_list = q_list
+        self.current_score = 0
+
+    def still_has_questions(self):
+        return self.question_number < len(self.question_list)
+
+    def itemretrieve(self):
+        current_question = self.question_list[self.question_number]
+        self.question_number += 1
+        user_answer = input(f"Q.{self.question_number}: {current_question.text} (True/False): ")
+        self.check_answer(user_answer, current_question.answer)
+
+    def check_answer(self, user_answer, correct_answer):
+        if user_answer.lower() == correct_answer.lower():
+            self.current_score += 1
+            print("You got it right!")
+        else:
+            print("That's wrong")
+
+        print(f"The correct answer was {correct_answer}.")
+        print(f"Your current score is: {self.current_score} / {self.question_number}")
+        print("\n")
+
+#data.py
+
+question_data = [
+    {"response_code": 0, "results": [{"type": "boolean",
+                                      "difficulty": "easy",
+                                      "category": "Science: Computers",
+                                      "question": "Linux was first created as an alternative to Windows XP.",
+                                      "correct_answer": "False",
+                                      "incorrect_answers": ["True"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "The Windows 7 operating system has six main editions.",
+                                      "correct_answer": "True", "incorrect_answers": ["False"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "RAM stands for Random Access Memory.", "correct_answer": "True",
+                                      "incorrect_answers": ["False"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "Pointers were not used in the original C programming language; they were added later on in C++.",
+                                      "correct_answer": "False", "incorrect_answers": ["True"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "In most programming languages, the operator ++ is equivalent to the statement &quot;+= 1&quot;.",
+                                      "correct_answer": "True", "incorrect_answers": ["False"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "&quot;HTML&quot; stands for Hypertext Markup Language.",
+                                      "correct_answer": "True", "incorrect_answers": ["False"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "Ada Lovelace is often considered the first computer programmer.",
+                                      "correct_answer": "True", "incorrect_answers": ["False"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "The programming language &quot;Python&quot; is based off a modified version of &quot;JavaScript&quot;.",
+                                      "correct_answer": "False", "incorrect_answers": ["True"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "Time on Computers is measured via the EPOX System.",
+                                      "correct_answer": "False", "incorrect_answers": ["True"]},
+                                     {"type": "boolean", "difficulty": "easy", "category": "Science: Computers",
+                                      "question": "The NVidia GTX 1080 gets its name because it can only render at a 1920x1080 screen resolution.",
+                                      "correct_answer": "False", "incorrect_answers": ["True"]}]}
+]
+
