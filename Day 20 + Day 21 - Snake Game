@@ -1,0 +1,166 @@
+#main.py
+
+from turtle import Screen
+from snake import Snake
+import time
+from food import Food
+from scoreboard import ScoreBoard
+
+screen = Screen()
+screen.setup(width=600, height=600)
+screen.bgcolor("black")
+screen.title("Manan's Snake Game")
+screen.tracer(0)
+
+snake = Snake()
+food = Food()
+scoreboard = ScoreBoard()
+
+screen.listen()
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.down, "Down")
+screen.onkey(snake.left, "Left")
+screen.onkey(snake.right, "Right")
+
+game_is_on = True
+while game_is_on:
+    screen.update()
+    time.sleep(0.1)
+    snake.move()
+
+    if snake.head.distance(food) < 15:
+        snake.extend_length()
+        food.refresh()
+        scoreboard.last_score()
+
+    # detects wall collision
+    if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
+        scoreboard.game_over()
+        game_is_on = False
+
+    # detects collision with snake tail
+    
+    for segment in snake.segments:
+        if segment == snake.head:
+            pass
+        elif snake.head.distance(segment) < 10:
+            game_is_on = False
+            scoreboard.game_over()
+
+
+screen.exitonclick()
+
+# Snake = Turtle()
+# Snake.shape("square")
+# Snake.color("white")
+# Snake2 = Turtle()
+# Snake2.shape("square")
+# Snake2.color("white")
+# Snake2.goto(x=-20, y=0)
+# Snake3 = Turtle()
+# Snake3.shape("square")
+# Snake3.color("white")
+# Snake3.goto(x=-40, y=0)
+
+from turtle import Turtle
+
+#snake.py
+
+class Snake:
+    def __init__(self):
+        self.segments = []
+        self.create_snake()
+        self.head = self.segments[0]
+
+    def create_snake(self):
+        starting_positions = [(0, 0), (-20, 0), (-40, 0)]
+        for position in starting_positions:
+            self.add_segment(position)
+
+    def add_segment(self, position):
+        new_segment = Turtle("square")
+        new_segment.color("white")
+        new_segment.penup()
+        new_segment.goto(position)
+        self.segments.append(new_segment)
+
+    def extend_length(self):
+        self.add_segment(self.segments[-1].position())
+
+    def move(self):
+        for seg_num in range(len(self.segments) - 1, 0, -1):
+            new_x = self.segments[seg_num - 1].xcor()
+            new_y = self.segments[seg_num - 1].ycor()
+            self.segments[seg_num].goto(new_x, new_y)
+            # Set the turtle's heading to 90 degrees (north)
+        self.head.forward(20)
+
+    def up(self):
+        if self.head.heading() != 270:
+            self.head.setheading(90)
+
+    def down(self):
+        if self.head.heading() != 90:
+            self.head.setheading(270)
+
+    def left(self):
+        if self.head.heading() != 0:
+            self.head.setheading(180)
+
+    def right(self):
+        if self.head.heading() != 180:
+            self.head.setheading(0)
+
+#food.py
+
+from turtle import Turtle
+import random
+
+class Food(Turtle):
+
+    def __init__(self):
+        super().__init__()
+        self.penup()  # This ensures the turtle doesn't draw a line when moving to the starting position.
+        self.color("blue")
+        self.shape("circle")
+        self.shapesize(0.5, 0.5)
+        self.refresh()
+
+    def refresh(self):
+        random_x = random.randint(-300, 300)
+        random_y = random.randint(-300, 300)
+        self.goto(random_x, random_y)
+
+from turtle import Turtle
+
+font = ("Arial", 12, "normal")
+alignment = "center"
+
+#scoreboard.py
+
+class ScoreBoard(Turtle):
+
+    def __init__(self):
+        super().__init__()
+        self.score = 0
+        self.color("white")
+        self.goto(0, 275)
+        self.penup
+        self.hideturtle()
+        self.clear()
+        self.update_score()
+
+    def update_score(self):
+        self.write(f"Score: {self.score} ", False, align=alignment, font=font)
+
+    def game_over(self):
+        self.goto(0, 0)
+        self.clear()
+        self.write("GAME OVER", font=20)
+
+    def last_score(self):
+        self.clear()
+        self.score += 1
+        self.update_score()
+
+
