@@ -1,0 +1,150 @@
+#main.py
+
+import turtle
+from paddle import Paddle
+from ball import Ball
+from scoreboard import ScoreBoard
+import time
+
+# Set up the screen
+screen = turtle.Screen()
+screen.title("Pong Game")
+screen.bgcolor("black")
+screen.setup(width=800, height=600)
+screen.tracer(0)
+
+ball = Ball()
+scoreboard = ScoreBoard()
+
+# Create the left and right paddle
+right_paddle = Paddle((350, 0))
+left_paddle = Paddle((-350, 0))
+
+# Keyboard bindings
+screen.listen()
+screen.onkeypress(right_paddle.move_up, "Up")
+screen.onkeypress(right_paddle.move_down, "Down")
+screen.onkeypress(left_paddle.move_up, "Left")
+screen.onkeypress(left_paddle.move_down, "Right")
+
+# Main game loop
+while True:
+    time.sleep(0.01)
+    screen.update()
+    ball.move()
+    ball.check_wall_collision()
+    ball.check_paddle_collision(right_paddle)
+    ball.check_paddle_collision(left_paddle)
+
+    # Check if the ball goes out of bounds and reset its position if it does and updates the score if it does
+    if ball.body.xcor() > 380:
+        ball.reset_position()
+        scoreboard.increment_l_score()
+
+    if ball.body.xcor() < -380:
+        ball.reset_position()
+        scoreboard.increment_r_score()
+
+screen.exitonclick()
+
+#ball.py
+
+import turtle
+
+
+class Ball:
+    def __init__(self):
+        self.body = turtle.Turtle()
+        self.body.speed(0)  # Set animation speed to the fastest
+        self.body.shape("circle")
+        self.body.color("white")
+        self.body.penup()
+        self.body.goto(0, 0)  # Start at the center of the screen
+        self.x_move = 3  # Initial horizontal movement speed
+        self.y_move = 3  # Initial vertical movement speed
+
+    def move(self):
+        new_x = self.body.xcor() + self.x_move
+        new_y = self.body.ycor() + self.y_move
+        self.body.goto(new_x, new_y)
+
+    def bounce_y(self):
+        self.y_move *= -1  # Reverse the y-direction
+
+    def bounce_x(self):
+        self.x_move *= -1  # Reverse the x-direction
+
+    def reset_position(self):
+        self.body.goto(0, 0)  # Move the ball back to the center
+        self.bounce_x()  # Optionally change the horizontal direction
+
+    def check_wall_collision(self):
+        if self.body.ycor() > 290 or self.body.ycor() < -290:
+            self.bounce_y()
+
+# Function to check for collisions with the top and bottom walls
+    def check_paddle_collision(self, paddle):
+        if self.body.distance(paddle.body) < 50 and (
+                paddle.body.xcor() - 20 < self.body.xcor() < paddle.body.xcor() + 20):
+            self.bounce_x()
+
+#paddle.py
+
+import turtle
+
+
+class Paddle:
+    def __init__(self, position):
+        self.body = turtle.Turtle()
+        self.body.speed(0)  # Animation speed, 0 is the fastest
+        self.body.shape("square")
+        self.body.color("white")
+        self.body.shapesize(stretch_wid=5, stretch_len=1)  # Scale the paddle size
+        self.body.penup()
+        self.body.goto(position)
+
+    def move_up(self):
+        y = self.body.ycor()
+        if y < 250:  # Prevent moving out of the screen
+            y += 20
+        self.body.sety(y)
+
+    def move_down(self):
+        y = self.body.ycor()
+        if y > -240:  # Prevent moving out of the screen
+            y -= 20
+        self.body.sety(y)
+
+from turtle import Turtle
+
+#scoreboard.py
+
+class ScoreBoard(Turtle):
+
+    def __init__(self):
+        super().__init__()
+        self.color("white")
+        self.penup()
+        self.hideturtle()
+        self.l_score = 0
+        self.r_score = 0
+        self.update_scoreboard()
+
+    def update_scoreboard(self):
+        self.clear()  # Clear the current score before updating
+        self.goto(-100, 200)
+        self.write(self.l_score, align="center", font=("Courier", 80, "normal"))
+        self.goto(100, 200)
+        self.write(self.r_score, align="center", font=("Courier", 80, "normal"))
+
+    def game_over(self):
+        self.goto(0, 0)
+        self.write("GAME OVER", align="center", font=("Courier", 20, "normal"))
+
+    def increment_r_score(self):
+        self.r_score += 1
+        self.update_scoreboard()
+
+    def increment_l_score(self):
+        self.l_score += 1
+        self.update_scoreboard()
