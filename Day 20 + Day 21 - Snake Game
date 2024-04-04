@@ -35,17 +35,15 @@ while game_is_on:
 
     # detects wall collision
     if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
-        scoreboard.game_over()
-        game_is_on = False
-
+        scoreboard.reset()
+        snake.reset()
     # detects collision with snake tail
-    
+
     for segment in snake.segments:
         if segment == snake.head:
             pass
         elif snake.head.distance(segment) < 10:
-            game_is_on = False
-            scoreboard.game_over()
+            snake.reset()
 
 
 screen.exitonclick()
@@ -62,9 +60,13 @@ screen.exitonclick()
 # Snake3.color("white")
 # Snake3.goto(x=-40, y=0)
 
+
 from turtle import Turtle
 
 #snake.py
+
+from turtle import Turtle
+
 
 class Snake:
     def __init__(self):
@@ -111,10 +113,18 @@ class Snake:
         if self.head.heading() != 180:
             self.head.setheading(0)
 
+    def reset(self):
+        for seg in self.segments:
+            seg.goto(1000, 1000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
+
 #food.py
 
 from turtle import Turtle
 import random
+
 
 class Food(Turtle):
 
@@ -131,18 +141,21 @@ class Food(Turtle):
         random_y = random.randint(-300, 300)
         self.goto(random_x, random_y)
 
+#scoreboard.py
+
+class ScoreBoard(Turtle):
+
 from turtle import Turtle
 
 font = ("Arial", 12, "normal")
 alignment = "center"
-
-#scoreboard.py
 
 class ScoreBoard(Turtle):
 
     def __init__(self):
         super().__init__()
         self.score = 0
+        self.high_score = ScoreBoard.read_high_score()
         self.color("white")
         self.goto(0, 275)
         self.penup
@@ -150,17 +163,33 @@ class ScoreBoard(Turtle):
         self.clear()
         self.update_score()
 
-    def update_score(self):
-        self.write(f"Score: {self.score} ", False, align=alignment, font=font)
+    #Read the high score from 'data.txt', assuming the file exists and contains a valid integer.
+    @staticmethod
+    def read_high_score():
+        with open("data.txt") as file:
+            return int(file.read())
 
-    def game_over(self):
-        self.goto(0, 0)
+    def write_high_score(self):
+        with open("data.txt", "w") as file:
+            file.write(f"{self.high_score}")
+
+    def update_score(self):
         self.clear()
-        self.write("GAME OVER", font=20)
+        self.write(f"Score: {self.score} High Score: {self.high_score}", False, align=alignment, font=font)
 
     def last_score(self):
         self.clear()
         self.score += 1
         self.update_score()
 
+    def reset(self):
+        if self.score > self.high_score:
+           self.high_score = self.score
+           self.write_high_score()
+        self.score = 0
+        self.update_score()
 
+
+#data.txt
+
+0
