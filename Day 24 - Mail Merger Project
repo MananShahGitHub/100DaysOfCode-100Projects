@@ -1,0 +1,50 @@
+#main.py
+
+# # Define the paths to the files directly
+template_path = "Input/Letters/starting_letter.txt"
+names_path = "Input/Names/invited_names.txt"
+
+# # Read and store the template letter
+with open(template_path, "r") as file:
+    template_content = file.read()
+
+# Open the names file and process each name as it is read
+with open(names_path, "r") as names_file:
+    for name in names_file:
+        name = name.strip()
+        personalized_content = template_content.replace("[name]", name)
+        with open(f"./Output/ReadyToSend/letter_for_{name}.txt", mode="w") as completed_letter:
+            completed_letter.write(personalized_content)
+        # print(personalized_content)
+
+#example.txt
+
+Dear Aang,
+
+You are invited to my birthday this Saturday.
+
+Hope you can make it!
+
+Angela
+
+#invited_names.txt 
+
+Aang
+Zuko
+Appa
+Katara
+Sokka
+Momo
+Uncle Iroh
+Toph
+
+#starting_letter.txt
+
+Aang
+Zuko
+Appa
+Katara
+Sokka
+Momo
+Uncle Iroh
+Toph
