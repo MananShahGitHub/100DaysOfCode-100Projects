@@ -115,9 +115,9 @@ class Paddle:
             y -= 20
         self.body.sety(y)
 
-from turtle import Turtle
-
 #scoreboard.py
+
+from turtle import Turtle
 
 class ScoreBoard(Turtle):
 
