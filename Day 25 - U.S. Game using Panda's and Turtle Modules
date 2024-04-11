@@ -1,0 +1,154 @@
+#main.py
+
+import pandas as pd
+import turtle
+
+# Assuming ScoreBoard is correctly defined in another module
+from scoreboard import ScoreBoard
+
+screen = turtle.Screen()
+t = turtle.Turtle()
+screen.title("U.S. States Game")
+image = "blank_states_img.gif"
+screen.addshape(image)
+turtle.shape(image)
+
+csv_file = "50_states.csv"
+data = pd.read_csv(csv_file)
+states = data["state"]
+
+scoreboard = ScoreBoard()
+correct_answers = []
+
+
+def check_state_value(answer_state_upper):
+    if answer_state_upper in states.values:
+        matching_rows = data[states == answer_state_upper]
+        scoreboard.increment_score()
+        return matching_rows
+    else:
+        print("Please enter a valid state name")
+        return None
+
+
+def write_state(matching_rows, answer_state_upper):
+    if matching_rows is not None:
+        # x = int(matching_rows['x'].iloc[0])
+        # y = int(matching_rows['y'].iloc[0])
+        x = int(matching_rows.x)
+        y = int(matching_rows.y)
+        t.penup()
+        t.goto(x, y)
+        t.write(answer_state_upper, align="center", font=("Arial", 10, "normal"))
+
+
+game_is_on = True
+while game_is_on:
+    answer_state = screen.textinput(title="Guess the State", prompt="What's another state's name?").title()
+    if answer_state is None:  # Allows to end the game by clicking "Cancel"
+        game_is_on = False
+        continue
+    if answer_state == "Exit":
+        break
+    answer_state_upper = answer_state.title()
+    matching_rows = check_state_value(answer_state_upper)
+
+    if matching_rows is not None:
+        write_state(matching_rows, answer_state_upper)
+        correct_answers.append(answer_state_upper)
+
+    print(", ".join(correct_answers))
+
+
+missing_states = []
+for x in states:
+    if x not in correct_answers:
+        missing_states.append(x)
+
+ms_df = pd.DataFrame(missing_states)
+ms_df.to_csv('states_to_learn.csv', index=False)
+print(ms_df)
+
+# scoreboard.py
+
+from turtle import Turtle
+
+
+class ScoreBoard(Turtle):
+
+    def __init__(self):
+        super().__init__()
+        self.color("black")
+        self.penup()
+        self.hideturtle()
+        self.score = 0
+        self.update_scoreboard()
+
+    def update_scoreboard(self):
+        self.clear()  # Clear the current score before updating
+        self.goto(0, 270)
+        self.write(f"Score: {self.score}", align="center", font=("Courier", 30, "normal"))
+        if self.score == 50:
+            self.write("Congratulations you have won the game and guessed all 50 states!")
+
+    def game_over(self):
+        self.goto(0, 0)
+        self.write("GAME OVER", align="center", font=("Courier", 20, "normal"))
+
+    def increment_score(self):
+        self.score += 1
+        self.update_scoreboard()
+
+# states_to_learn.csv
+
+0
+Alaska
+Arizona
+Arkansas
+California
+Colorado
+Connecticut
+Delaware
+Florida
+Georgia
+Hawaii
+Idaho
+Illinois
+Indiana
+Iowa
+Kansas
+Kentucky
+Louisiana
+Maine
+Maryland
+Massachusetts
+Michigan
+Minnesota
+Mississippi
+Missouri
+Montana
+Nebraska
+Nevada
+New Hampshire
+New Jersey
+New Mexico
+New York
+North Carolina
+North Dakota
+Ohio
+Oklahoma
+Oregon
+Pennsylvania
+Rhode Island
+South Carolina
+South Dakota
+Tennessee
+Texas
+Utah
+Vermont
+Virginia
+Washington
+West Virginia
+Wisconsin
+Wyoming
+
