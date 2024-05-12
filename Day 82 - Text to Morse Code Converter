@@ -1,3 +1,5 @@
+# Manan S. Shah Copyright - The work below is my own and not a development of any other person
+
 # Dictionary to represent the Morse code chart
 MORSE_CODE_DICT = {
     'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
