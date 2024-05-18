@@ -8,10 +8,10 @@ The projects on this repository also includes the work I am the most proud of as
 
 Depending on when you're reading this this branch might be in its earlier stages. I strongly recommend to go through ALL the branches on this repository.
 
-Beginner-Level-Projects - You will find beginner level projects on this branch
-Intermediate-Level-Projects - You will find intermediate level projects on this branch
-Advanced-Level-Projects - You will find advanced level projects on this branch
-Professional-Portfolio-Projects - You will find the most interesting, useful and extensive projects on this branch hence why I have made it the default branch of this repo.
+1. Beginner-Level-Projects - You will find beginner level projects on this branch
+2. Intermediate-Level-Projects - You will find intermediate level projects on this branch
+3. Advanced-Level-Projects - You will find advanced level projects on this branch
+4. Professional-Portfolio-Projects - You will find the most interesting, useful and extensive projects on this branch hence why I have made it the default branch of this repo.
 
 I am always open to feedback, suggestions, and opportunities for collaboration. Let’s connect and explore possibilities to create something innovative!
 
