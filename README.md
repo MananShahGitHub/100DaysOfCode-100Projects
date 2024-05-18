@@ -17,5 +17,5 @@ Depending on when you're reading this this branch might be in its earlier stages
 
 I am always open to feedback, suggestions, and opportunities for collaboration. Let’s connect and explore possibilities to create something innovative!
 
-LinkedIn: LinkedIn.com/in/manan-shah7/
-Email: mananshah2047@gmail.com
+1. LinkedIn: LinkedIn.com/in/manan-shah7/
+2. Email: mananshah2047@gmail.com
