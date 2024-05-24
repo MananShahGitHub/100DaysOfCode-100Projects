@@ -3,7 +3,8 @@ Overview of branches of the 100 Days of Code Repository created by Manan S. Shah
 1. Beginner-Level-Projects - You will find beginner level projects on this branch
 2. Intermediate-Level-Projects - You will find intermediate level projects on this branch
 3. Advanced-Level-Projects - You will find advanced level projects on this branch
-4. Professional-Portfolio-Projects - You will find the most interesting, useful and extensive projects on this branch hence why I have made it the default branch of this repo.
+4. Day-70-Git/Github-Experiment-Branch - You will find files I committed using terminal commands and git commands to learn git, github, and version control 
+5. Professional-Portfolio-Projects - You will find the most interesting, useful and extensive projects on this branch hence why I have made it the default branch of this repo.
 
 This branch showcases the most comprehensive programming projects I completed as part of my "100 Days of Code" challenge. Although the repository spanned a longer timeframe, it contains 100 distinct projects distributed across various branches.
 
