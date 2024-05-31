@@ -1,0 +1,75 @@
+import tkinter as tk
+from tkinter import messagebox
+import time
+
+class TypingSpeedTestApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Typing Speed Test")
+        self.sample_text = ("The quick brown fox jumps over the lazy dog. "
+                            "Typing is an essential skill. With practice, you can "
+                            "increase your typing speed significantly.")
+        
+        self.start_time = None
+        self.end_time = None
+
+        # Setting up the GUI components
+        self.setup_gui()
+
+    def setup_gui(self):
+        # Display the sample text
+        self.sample_label = tk.Label(self.root, text="Sample Text:")
+        self.sample_label.pack(pady=10)
+        self.sample_text_label = tk.Label(self.root, text=self.sample_text, wraplength=500, justify="left")
+        self.sample_text_label.pack(pady=10)
+
+        # Entry widget for typing the text
+        self.typing_entry = tk.Text(self.root, height=10, width=60, wrap="word")
+        self.typing_entry.pack(pady=10)
+        self.typing_entry.bind("<FocusIn>", self.start_typing)
+        self.typing_entry.bind("<Return>", self.calculate_speed)
+
+        # Button to submit the text
+        self.submit_button = tk.Button(self.root, text="Submit", command=self.calculate_speed)
+        self.submit_button.pack(pady=10)
+
+        # Label to display typing speed and feedback
+        self.result_label = tk.Label(self.root, text="")
+        self.result_label.pack(pady=10)
+
+    def start_typing(self, event):
+        if not self.start_time:
+            self.start_time = time.time()
+
+    def calculate_speed(self, event=None):
+        # Record the end time when user submits the text
+        self.end_time = time.time()
+        
+        # Calculate the typing speed in words per minute
+        typed_text = self.typing_entry.get("1.0", tk.END).strip()
+        if typed_text == "":
+            messagebox.showwarning("Warning", "Please type the text before submitting.")
+            return
+        
+        elapsed_time = self.end_time - self.start_time
+        word_count = len(typed_text.split())
+        words_per_minute = (word_count / elapsed_time) * 60
+
+        # Provide feedback
+        if words_per_minute < 40:
+            feedback = "Below average typing speed. Keep practicing!"
+        elif words_per_minute < 100:
+            feedback = "Average typing speed. Good job!"
+        else:
+            feedback = "Excellent typing speed! You're a pro!"
+
+        # Display the result and feedback
+        self.result_label.config(text=f"Typing Speed: {words_per_minute:.2f} words per minute\n{feedback}")
+
+        # Reset the start time for a new test
+        self.start_time = None
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = TypingSpeedTestApp(root)
+    root.mainloop()
