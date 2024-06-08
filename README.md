@@ -14,7 +14,7 @@ Each project is accompanied by a detailed description to provide insights into i
 
 The projects on this repository also includes the work I am the most proud of as well. 
 
-Depending on when you're reading this this branch might be in its earlier stages. I strongly recommend to go through ALL the branches on this repository, which have descriptions at the top as well as their own README files. 
+Depending on when you're reading this the branch might be in its earlier stages. I strongly recommend to go through ALL the branches on this repository, which have descriptions at the top as well as their own README files. 
 
 I am always open to feedback, suggestions, and opportunities for collaboration. Let’s connect and explore possibilities to create something innovative!
 
