@@ -1,3 +1,5 @@
+# Manan S. Shah Copyright - The work below is my own and not a development of any other person
+
 import tkinter as tk
 from tkinter import messagebox
 import time
