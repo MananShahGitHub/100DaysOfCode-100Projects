@@ -71,7 +71,6 @@ class TypingSpeedTestApp:
         # Reset the start time for a new test
         self.start_time = None
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = TypingSpeedTestApp(root)
-    root.mainloop()
+root = tk.Tk()
+app = TypingSpeedTestApp(root)
+root.mainloop()
