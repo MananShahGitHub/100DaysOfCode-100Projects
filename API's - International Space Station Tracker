@@ -1,0 +1,79 @@
+import requests
+from datetime import datetime
+import smtplib
+
+MY_LAT = -48.551064015083
+MY_LONG = 	-110.75244356431
+my_email = "mananshah2047@gmail.com"
+password = "mfuf otcj iios cwbx"
+
+response = requests.get(url="http://api.open-notify.org/iss-now.json")
+response.raise_for_status()
+
+data = response.json()
+iss_longitude = float(data["iss_position"]["longitude"])
+iss_latitude = float(data["iss_position"]["latitude"])
+
+iss_position = [iss_longitude, iss_latitude]
+
+print(iss_position)
+
+parameters = {
+    "lat": MY_LAT,
+    "lng": MY_LONG,
+    "formatted": 0,
+}
+
+response = requests.get("https://api.sunrise-sunset.org/json", params=parameters)
+data = response.json()
+sunrise_hour = int(data["results"]['sunrise'].split('T')[1].split(":")[0])
+sunset_hour = int(data["results"]['sunset'].split('T')[1].split(":")[0])
+
+
+print(sunrise_hour)
+print(sunset_hour)
+
+# gets the current time using datetime
+time_now = datetime.now()
+print(time_now.hour)
+print(data)
+
+# Get the current time as a time object (hours and minutes)
+time_now = datetime.now().hour
+
+if MY_LAT-5 <= iss_latitude <= MY_LAT+5:
+    if MY_LONG - 5 <= iss_longitude <= MY_LONG + 5:
+        if sunset_hour <= time_now or time_now <= sunrise_hour:
+            with smtplib.SMTP("smtp.gmail.com") as connection:
+                connection.starttls()
+                connection.login(user=my_email, password=password)
+                connection.sendmail(
+                    from_addr=my_email,
+                    to_addrs="mananshah2047@gmail.com",
+                    msg=f"Subject: ISS TRACKER NOTIFICATION\n\n{'Look up the ISS IS ABOVE YOU'}"
+
+                )
+
+print("Email Sent!")
+
+
+
+
+
+
+
+# 'sunset': '2024-08-14T01:17:57+00:00'
+# 'sunrise': '2024-08-13T11:37:13+00:00'
+
+# Another more complicated method to convert the time to a string in 24 hour format
+
+# # Convert the current time to a string in 24-hour format (if needed) - strftime converts it to a 24 hour format
+# time_now_str = time_now.strftime("%H:%M:%S")
+#
+# # Parse the 24-hour time string back to a datetime object
+# d = datetime.strptime(time_now_str, "%H:%M:%S")
+#
+# # Format the datetime object to 12-hour time format
+# time_12_hour = d.strftime("%I:%M %p")
+#
+# print(time_12_hour)
