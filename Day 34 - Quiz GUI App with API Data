@@ -1,0 +1,181 @@
+#main.py file
+
+from question_model import Question
+from data import question_data
+from quiz_brain import QuizBrain
+from ui import QuizInterface
+
+# Step 1: Create the question bank from the question_data
+question_bank = []
+for question in question_data:
+    question_text = question["question"]
+    question_answer = question["correct_answer"]
+    new_question = Question(question_text, question_answer)
+    question_bank.append(new_question)
+
+# Step 2: Initialize QuizBrain with the question bank
+quiz = QuizBrain(question_bank)
+
+# Step 3: Initialize the user interface with the QuizBrain instance
+quiz_ui = QuizInterface(quiz)
+
+#data.py file
+
+import requests
+
+# Step 1: Fetch the data from the API
+url = "https://opentdb.com/api.php"
+params = {
+    "amount": 10,  # Number of questions to fetch
+    "type": "boolean",  # Type of questions: "boolean" for True/False
+    "category": 15,
+}
+
+response = requests.get(url, params=params)
+response.raise_for_status()  # Ensure the request was successful
+
+# Step 2: Parse the response JSON
+data = response.json()
+
+# Step 3: Modify the question_data
+question_data = data["results"]
+
+# Example modification: Add a custom prefix to each question text
+for question in question_data:
+    question["question"] = "Custom Prefix: " + question["question"]
+
+# Step 4: Replace the old question_data with the modified one
+data["results"] = question_data
+
+print(data)
+
+# If you need the modified `question_data` for further use:
+
+modified_question_data = data["results"]
+
+#question_model.py
+
+class Question:
+
+    def __init__(self, q_text, q_answer):
+        self.text = q_text
+        self.answer = q_answer
+
+# quiz_brain.py file
+
+import html
+
+
+class QuizBrain:
+
+    def __init__(self, q_list):
+        self.question_number = 0
+        self.score = 0
+        self.question_list = q_list
+        self.current_question = None
+
+    def still_has_questions(self):
+        return self.question_number < len(self.question_list)
+
+    def next_question(self):
+        self.current_question = self.question_list[self.question_number]
+        self.question_number += 1
+        q_text = html.unescape(self.current_question.text)
+        return f"Q.{self.question_number}: {q_text}"
+        user_answer = input(f"Q.{self.question_number}: {self.current_question.text} (True/False): ")
+        self.check_answer(user_answer)
+
+    def check_answer(self, user_answer):
+        correct_answer = self.current_question.answer
+        if user_answer.lower() == correct_answer.lower():
+            self.score += 1
+            return True
+        else:
+            return False
+
+        print(f"Your current score is: {self.score}/{self.question_number}")
+        print("\n")
+
+# ui.py file
+
+from tkinter import *
+from quiz_brain import QuizBrain
+
+THEME_COLOR = "#375362"
+FONT = ("Arial", 20, "italic")
+PADDING = 20
+WIDTH = 300
+HEIGHT = 250
+
+
+class QuizInterface:
+
+    def __init__(self, quiz_brain: QuizBrain):
+        self.quiz = quiz_brain  # Correct assignment of quiz_brain
+        self.window = Tk()
+        self.window.title("Quizzler")
+        self.window.config(padx=PADDING, pady=PADDING, bg=THEME_COLOR)
+
+        # Create a Score Label and position it in the top right
+        self.score_label = Label(text="Score: 0", fg="white", bg=THEME_COLOR, font=("Arial", 15, "bold"))
+        self.score_label.grid(row=0, column=1, sticky="e", padx=20, pady=20)
+
+        # Create a Canvas widget for displaying the question text
+        self.canvas = Canvas(width=WIDTH, height=HEIGHT, bg="white")
+        self.question_text = self.canvas.create_text(
+            WIDTH // 2,
+            HEIGHT // 2,
+            text="Question goes here",
+            fill=THEME_COLOR,
+            font=FONT,
+            width=WIDTH - 40  # To ensure the text wraps properly within the canvas
+        )
+        self.canvas.grid(row=1, column=0, columnspan=2, pady=PADDING)
+
+        # Create True and False buttons
+        true_img = PhotoImage(file="images/true.png")
+        false_img = PhotoImage(file="images/false.png")
+        self.true_button = Button(image=true_img, highlightthickness=0, command=self.true_pressed)
+        self.false_button = Button(image=false_img, highlightthickness=0, command=self.false_pressed)
+
+        self.true_button.grid(row=2, column=0, pady=PADDING)
+        self.false_button.grid(row=2, column=1, pady=PADDING)
+
+        # Keeps the reference to the images
+        self.true_button.image = true_img
+        self.false_button.image = false_img
+
+        # Fetch the first question
+        self.get_next_question()
+
+        # Start the main loop
+        self.window.mainloop()
+
+    def get_next_question(self):
+        self.canvas.config(bg="white")
+        if self.quiz.still_has_questions():
+            self.score_label.config(text=f"Score: {self.quiz.score}")
+            q_text = self.quiz.next_question()
+            self.canvas.itemconfig(self.question_text, text=q_text)
+        else:
+            self.canvas.itemconfig(self.question_text, text="You've reached the end of the quiz!")
+            self.true_button(state="disabled")
+            self.false_button(state="disabled")
+
+    def true_pressed(self):
+        is_right = self.quiz.check_answer("True")
+        self.give_feedback(is_right)
+
+    def false_pressed(self):
+        is_right = self.quiz.check_answer("False")
+        self.give_feedback(is_right)
+
+    def give_feedback(self, is_right):
+        if is_right:
+            self.score_label.config(text=f"Score: {self.quiz.score}")
+            print("Correct!")
+        else:
+            print("Incorrect!")
+        self.get_next_question()
+
+# Note: The quiz instance should be created in your main.py and passed to QuizInterface.
