@@ -1,0 +1,37 @@
+# Application sends you a notification on WhatsApp
+import requests
+from twilio.rest import Client
+
+API_KEY = "d36ac960afe667e73aafc967ae201e70"
+OWM_Endpoint = "https://api.openweathermap.org/data/2.5/forecast"
+account_sid = "ACc75f2bb57ec5ca1b4f973b5cb6059313"
+AUTH_TOKEN = "a0d17841a952459d462c73d7d701bedd"
+
+weather_params = {
+    "lat": 40.518715,
+    "lon": -74.412094,
+    "appid": API_KEY
+}
+
+response = requests.get(OWM_Endpoint, params=weather_params)
+response.raise_for_status()  # Ensure the request was successful
+
+weather_data = response.json()
+
+will_rain = False
+for hour_data in weather_data["list"]:
+    condition_code = hour_data['weather'][0]["id"]
+    if int(condition_code) < 700:
+        will_rain = True
+
+if will_rain:
+    client = Client(account_sid, AUTH_TOKEN)
+    message = client.messages.create(
+        body="It's going to rain today. Remember to bring an umbrella ☂️",
+        from_="whatsapp:+14155238886",
+        to="whatsapp:+19175934747",
+    )
+
+print(message.status)
+# print(response.json())
+# print("HTTP Status Code:", response.status_code)
