@@ -1,0 +1,94 @@
+import PyPDF2
+import pyttsx3
+import os
+from pydub import AudioSegment
+import platform
+
+
+def extract_text_from_pdf(pdf_path):
+    """
+    Extracts text from a PDF file.
+    """
+    with open(pdf_path, 'rb') as file:
+        pdf_reader = PyPDF2.PdfReader(file)
+        text = ''
+        for page_num in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_num]
+            text += page.extract_text()
+    return text
+
+
+def split_text(text, max_length=1000):
+    """
+    Splits text into chunks of a specified maximum length.
+    """
+    words = text.split()
+    chunks = []
+    current_chunk = ''
+    for word in words:
+        # +1 accounts for the space or newline character
+        if len(current_chunk) + len(word) + 1 <= max_length:
+            current_chunk += ' ' + word
+        else:
+            chunks.append(current_chunk.strip())
+            current_chunk = word
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+    return chunks
+
+
+def text_to_speech(text_chunks, output_file):
+    """
+    Converts text chunks into speech and saves as an audio file.
+    """
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 150)  # Adjust speech rate (default is 200)
+    temp_files = []
+
+    # Detect the platform to set the correct file extension and format
+    if platform.system() == 'Darwin':  # macOS
+        temp_ext = '.aiff'
+        audio_format = 'aiff'
+    else:
+        temp_ext = '.wav'
+        audio_format = 'wav'
+
+    for i, chunk in enumerate(text_chunks):
+        temp_filename = f'chunk_{i}{temp_ext}'
+        engine.save_to_file(chunk, temp_filename)
+        engine.runAndWait()
+        temp_files.append(temp_filename)
+
+    # Combine all audio chunks into one file
+    combined = AudioSegment.empty()
+    for temp_file in temp_files:
+        audio = AudioSegment.from_file(temp_file, format=audio_format)
+        combined += audio
+        os.remove(temp_file)  # Remove temp file after adding
+
+    combined.export(output_file, format='mp3')
+    print(f'Audiobook saved as {output_file}')
+
+
+# Main execution code 
+
+pdf_file = ('/Users/mananshah7/Documents/J. P. Morgan Wealth Management - Manan Shah for Product Delivery '
+            'Associate position.pdf')  # Replace with your actual PDF file path
+output_file = 'audiobook.mp3'  # Define the output file name
+
+# Verify the file path
+if not os.path.exists(pdf_file):
+    print(f"Error: The file '{pdf_file}' does not exist.")
+else:
+    # Step 1: Extract text from PDF
+    print('Extracting text from PDF...')
+    text = extract_text_from_pdf(pdf_file)
+
+    # Step 2: Split text into manageable chunks
+    print('Splitting text into chunks...')
+    text_chunks = split_text(text)
+
+    # Step 3: Convert text chunks to speech and save as audio file
+    print('Converting text to speech...')
+    text_to_speech(text_chunks, output_file)
+    print('Audiobook creation completed.')
