@@ -1,22 +1,20 @@
-Overview of branches of the 100 Days of Code Repository created by Manan S. Shah
+100 Days of Code Repository Overview:
 
-1. Beginner-Level-Projects - You will find beginner level projects on this branch
-2. Intermediate-Level-Projects - You will find intermediate level projects on this branch
-3. Advanced-Level-Projects - You will find advanced level projects on this branch
-4. Day-70-Git/Github-Experiment-Branch - You will find files I committed using terminal commands and git commands to learn git, github, and version control 
-5. Professional-Portfolio-Projects - You will find the most interesting, useful and extensive projects on this branch hence why I have made it the default branch of this repo.
+This repository contains 100 distinct projects developed as part of my “100 Days of Code” challenge, organized into different branches:
 
-This branch showcases the most comprehensive programming projects I completed as part of my "100 Days of Code" challenge. Although the repository spanned a longer timeframe, it contains 100 distinct projects distributed across various branches.
+	•	Beginner-Level-Projects: Projects designed for beginners.
+	•	Intermediate-Level-Projects: Projects with intermediate complexity.
+	•	Advanced-Level-Projects: Advanced projects demonstrating deeper technical skills.
+	•	Day-70-Git/Github-Experiment-Branch: A branch dedicated to experimenting with Git and GitHub using terminal commands.
+	•	Professional-Portfolio-Projects (Default Branch): Showcases my most comprehensive and polished work. Each project includes detailed descriptions highlighting its development process and core features.
 
-The projects featured in this branch represent my most advanced, interesting, and challenging work, all developed independently. I am committed to continuously improving these projects through an iterative approach, ensuring each portfolio piece is refined over time.
+About This Repository:
 
-Each project is accompanied by a detailed description to provide insights into its development process and functionality.
+The Professional-Portfolio-Projects branch represents the pinnacle of my coding journey, featuring advanced, impactful, and independent projects. I’m continuously enhancing these projects to showcase my growth and commitment to excellence.
 
-The projects on this repository also includes the work I am the most proud of as well. 
+Explore and Connect:
 
-Depending on when you're reading this the branch might be in its earlier stages. I strongly recommend to go through ALL the branches on this repository, which have descriptions at the top as well as their own README files. 
+All branches have project descriptions and their own README files. Feedback, suggestions, and collaboration opportunities are welcome.
 
-I am always open to feedback, suggestions, and opportunities for collaboration. Let’s connect and explore possibilities to create something innovative!
-
-1. LinkedIn: LinkedIn.com/in/manan-shah7/
-2. Email: mananshah2047@gmail.com
+	•	LinkedIn: http://linkedin.com/in/manan-shah7
+	•	Email: mananshah2047@gmail.com
