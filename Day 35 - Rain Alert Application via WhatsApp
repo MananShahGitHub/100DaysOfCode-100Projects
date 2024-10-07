@@ -6,6 +6,8 @@ API_KEY = "d36ac960afe667e73aafc967ae201e70"
 OWM_Endpoint = "https://api.openweathermap.org/data/2.5/forecast"
 account_sid = "ACc75f2bb57ec5ca1b4f973b5cb6059313"
 AUTH_TOKEN = "a0d17841a952459d462c73d7d701bedd"
+FROM_WHATSAPP_NUMBER = "whatsapp:+14155238886"       # Twilio Sandbox WhatsApp number
+TO_WHATSAPP_NUMBER = "whatsapp:+19175934747"         # Replace with the recipient's WhatsApp number
 
 weather_params = {
     "lat": 40.518715,
@@ -28,8 +30,8 @@ if will_rain:
     client = Client(account_sid, AUTH_TOKEN)
     message = client.messages.create(
         body="It's going to rain today. Remember to bring an umbrella ☂️",
-        from_="whatsapp:+14155238886",
-        to="whatsapp:+19175934747",
+        from_=FROM_WHATSAPP_NUMBER,
+        to=TO_WHATSAPP_NUMBER
     )
 
 print(message.status)
